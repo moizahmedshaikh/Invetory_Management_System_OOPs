@@ -2,7 +2,24 @@ from abc import ABC, abstractmethod
 import datetime
 import json
 from datetime import datetime
-import time
+
+# Custom Exceptions
+class InventoryError(Exception):
+    pass
+
+class DuplicateProductError(InventoryError):
+    pass
+
+class ProductNotFoundError(InventoryError):
+    pass
+
+class InsufficientStockError(InventoryError):
+    pass
+
+class InvalidRestockError(InventoryError):
+    pass
+
+
 
 class Product(ABC):
     def __init__(self, product_id, name, price, quantity_in_stock):
@@ -79,26 +96,26 @@ class Clothing(Product):
         self._size = size
         self._material = material
 
-    def restock(self, amount):
+    def restock(self, amount): # type: ignore
         if amount > 0:
             self._quantity_in_stock += amount
             return True
         return False
 
-    def sell(self, quantity):
+    def sell(self, quantity): # type: ignore
         if quantity <= self._quantity_in_stock:
             self._quantity_in_stock -= quantity
             return True
         return False
 
-    def __str__(self):
+    def __str__(self): # type: ignore
         return (f"Clothing - ID: {self._product_id}, Name: {self._name}, "
                 f"Size: {self._size}, Material: {self._material}, "
                 f"Price: ${self._price}, Stock: {self._quantity_in_stock}")
             
 class Inventory:
     def __init__(self):
-        self._products = {} 
+        self._products = {}  
 
     def add_product(self, product):
         if product._product_id in self._products:
@@ -143,7 +160,7 @@ class Inventory:
 
     def remove_expired_products(self):
         expired = [pid for pid, p in self._products.items() 
-                 if isinstance(p, Grocery) and p.is_expired()]
+                 if isinstance(p, Grocery) and p.isExpired]
         for pid in expired:
             del self._products[pid]
         return len(expired)
@@ -162,7 +179,7 @@ class Inventory:
             # Extra attributes based on type
             if isinstance(product, Electronics):
                 prod_data.update({
-                    'warranty': product._warranty_years,
+                    'warranty': product._warranty,
                     'brand': product._brand
                 })
             elif isinstance(product, Grocery):
@@ -257,19 +274,19 @@ def main():
         choice = input("\nEnter your choice (1-9): ")
         
         try:
-            if choice == '1':  
+            if choice == '1':  # Add Product
                 product = get_product_input()
                 if product:
                     inventory.add_product(product)
                     print("Product added successfully!")
                     
-            elif choice == '2':  
+            elif choice == '2':  # Sell Product
                 product_id = input("Enter product ID to sell: ")
                 quantity = int(input("Enter quantity to sell: "))
                 if inventory.sell_product(product_id, quantity):
                     print("Sale completed successfully!")
                     
-            elif choice == '3':  
+            elif choice == '3':  # Search Products
                 print("\nSearch Options:")
                 print("1. By Name")
                 print("2. By Type")
@@ -305,7 +322,7 @@ def main():
                 else:
                     print("No products found")
                     
-            elif choice == '4':
+            elif choice == '4':  # View All Products
                 products = inventory.list_all_products()
                 if products:
                     print("\nAll Products:")
@@ -314,25 +331,25 @@ def main():
                 else:
                     print("Inventory is empty")
                     
-            elif choice == '5': 
+            elif choice == '5':  # Save Inventory
                 filename = input("Enter filename to save: ")
                 inventory.save_to_file(filename)
                 print(f"Inventory saved to {filename}")
                 
-            elif choice == '6': 
+            elif choice == '6':  # Load Inventory
                 filename = input("Enter filename to load: ")
                 inventory.load_from_file(filename)
                 print(f"Inventory loaded from {filename}")
                 
-            elif choice == '7': 
+            elif choice == '7':  # Remove Expired Groceries
                 count = inventory.remove_expired_products()
                 print(f"Removed {count} expired grocery items")
                 
-            elif choice == '8': 
+            elif choice == '8':  # Total Inventory Value
                 total = inventory.total_inventory_value()
                 print(f"Total inventory value: ${total:.2f}")
                 
-            elif choice == '9': 
+            elif choice == '9':  # Exit
                 print("Exiting program...")
                 break
                 
@@ -350,3 +367,6 @@ if __name__ == "__main__":
     main()
     
     
+
+
+
