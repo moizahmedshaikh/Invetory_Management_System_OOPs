@@ -98,7 +98,7 @@ class Clothing(Product):
             
 class Inventory:
     def __init__(self):
-        self._products = {}  # product_id -> product object
+        self._products = {} 
 
     def add_product(self, product):
         if product._product_id in self._products:
@@ -257,19 +257,19 @@ def main():
         choice = input("\nEnter your choice (1-9): ")
         
         try:
-            if choice == '1':  # Add Product
+            if choice == '1':  
                 product = get_product_input()
                 if product:
                     inventory.add_product(product)
                     print("Product added successfully!")
                     
-            elif choice == '2':  # Sell Product
+            elif choice == '2':  
                 product_id = input("Enter product ID to sell: ")
                 quantity = int(input("Enter quantity to sell: "))
                 if inventory.sell_product(product_id, quantity):
                     print("Sale completed successfully!")
                     
-            elif choice == '3':  # Search Products
+            elif choice == '3':  
                 print("\nSearch Options:")
                 print("1. By Name")
                 print("2. By Type")
@@ -305,7 +305,7 @@ def main():
                 else:
                     print("No products found")
                     
-            elif choice == '4':  # View All Products
+            elif choice == '4':
                 products = inventory.list_all_products()
                 if products:
                     print("\nAll Products:")
@@ -314,25 +314,25 @@ def main():
                 else:
                     print("Inventory is empty")
                     
-            elif choice == '5':  # Save Inventory
+            elif choice == '5': 
                 filename = input("Enter filename to save: ")
                 inventory.save_to_file(filename)
                 print(f"Inventory saved to {filename}")
                 
-            elif choice == '6':  # Load Inventory
+            elif choice == '6': 
                 filename = input("Enter filename to load: ")
                 inventory.load_from_file(filename)
                 print(f"Inventory loaded from {filename}")
                 
-            elif choice == '7':  # Remove Expired Groceries
+            elif choice == '7': 
                 count = inventory.remove_expired_products()
                 print(f"Removed {count} expired grocery items")
                 
-            elif choice == '8':  # Total Inventory Value
+            elif choice == '8': 
                 total = inventory.total_inventory_value()
                 print(f"Total inventory value: ${total:.2f}")
                 
-            elif choice == '9':  # Exit
+            elif choice == '9': 
                 print("Exiting program...")
                 break
                 
